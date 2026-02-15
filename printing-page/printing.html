@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>OdizeeBooth - Manual A4 Layout</title>
-    <link rel="stylesheet" href="printing-style.css">
+    <base href="/odzbooth-beta-main/"> 
+    <link rel="stylesheet" href="printing-page/printing-style.css">
 </head>
 <body>
     <div class="ui-layer">
@@ -17,7 +18,7 @@
     </div>
 
     <div class="a4-page" id="printableArea">
-        <img src="../assets/a4-holder.png" class="overlay-template">
+        <img src="assets/a4-holder.png" class="overlay-template">
 
         <div class="grid-container">
             <div class="column-left">
@@ -39,6 +40,7 @@
 
     <input type="file" id="manualFileInput" hidden accept="image/*" onchange="handleFile(this)">
 
-    <script src="printing.js"></script>
+    <script src="printing-page/printing.js"></script>
 </body>
 </html>
+
