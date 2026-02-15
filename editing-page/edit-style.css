@@ -591,3 +591,22 @@ button:disabled {
         width: 100%;
     }
 }
+
+/* Style for the Dashboard Navigation Link */
+.dashboard-btn {
+    background-color: #6f42c1; /* Purple color to distinguish it from other actions */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-btn:hover {
+    background-color: #59359a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
