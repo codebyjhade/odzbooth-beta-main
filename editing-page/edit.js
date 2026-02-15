@@ -1730,43 +1730,54 @@ async function initializeEditorPage() {
 document.addEventListener('DOMContentLoaded', initializeEditorPage);
 
 
+// Database Configuration
+const DB_NAME = "OdizeePrintingDB";
+const STORE_NAME = "print_queue";
+
+/**
+ * Saves high-quality strip to IndexedDB to avoid storage limits.
+ */
 async function saveToQueue() {
     try {
         const finalCanvas = await createFinalStripCanvas();
-        // Keep it as a high-quality PNG
+        // Keep 100% quality as a PNG
         const imageData = finalCanvas.toDataURL('image/png');
 
-        // Open (or create) the OdizeeBooth database
-        const request = indexedDB.open("OdizeePrintingDB", 1);
+        const request = indexedDB.open(DB_NAME, 1);
 
         request.onupgradeneeded = (e) => {
             const db = e.target.result;
-            if (!db.objectStoreNames.contains("print_queue")) {
-                db.createObjectStore("print_queue", { autoIncrement: true });
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME, { autoIncrement: true });
             }
         };
 
         request.onsuccess = (e) => {
             const db = e.target.result;
-            const transaction = db.transaction("print_queue", "readwrite");
-            const store = transaction.objectStore(storeName);
+            const transaction = db.transaction(STORE_NAME, "readwrite");
+            const store = transaction.objectStore(STORE_NAME);
             
-            // Check count first
             const countRequest = store.count();
             countRequest.onsuccess = () => {
                 if (countRequest.result < 9) {
                     store.add(imageData);
-                    alert(`High-res photo added! (${countRequest.result + 1}/9)`);
+                    alert(`High-quality strip added! (${countRequest.result + 1}/9)`);
+                    
+                    // Open dashboard and ask to reset
                     window.open('printing-page/printing.html', '_blank');
-                    if (confirm("Photo verified? Click OK to reset booth.")) {
+                    if (confirm("Verified in dashboard? Click OK to start a new session.")) {
                         window.location.href = 'index.html';
                     }
                 } else {
-                    alert("Batch is full! Please print the 9 strips first.");
+                    alert("Batch is full (9/9). Please print the current batch first.");
                 }
             };
         };
     } catch (error) {
-        console.error("IndexedDB Save Failed:", error);
+        console.error("Critical Save Error:", error);
     }
 }
+
+// Ensure the button is linked
+document.getElementById('confirmToHolderBtn').addEventListener('click', saveToQueue);
+
