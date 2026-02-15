@@ -1730,40 +1730,43 @@ async function initializeEditorPage() {
 document.addEventListener('DOMContentLoaded', initializeEditorPage);
 
 
-/**
- * Logic for the "Confirm to Paper Holder" button.
- * Saves to localStorage and opens the dashboard for verification.
- */
 async function saveToQueue() {
     try {
-        // Generate the high-quality final image
         const finalCanvas = await createFinalStripCanvas();
+        // Keep it as a high-quality PNG
         const imageData = finalCanvas.toDataURL('image/png');
 
-        let printQueue = JSON.parse(localStorage.getItem('odz_print_queue') || '[]');
+        // Open (or create) the OdizeeBooth database
+        const request = indexedDB.open("OdizeePrintingDB", 1);
 
-        if (printQueue.length < 9) {
-            printQueue.push(imageData);
-            localStorage.setItem('odz_print_queue', JSON.stringify(printQueue));
-            
-            // VERIFICATION WORKFLOW:
-            alert(`Added to batch! Current Status: ${printQueue.length}/9.`);
-            
-            // Open the dashboard in a new tab so you can verify the photo is there
-            window.open('printing-page/printing.html', '_blank'); 
-
-            // Manual confirmation before resetting the booth for the next student
-            if (confirm("Photo verified in queue? Click OK to start a new session.")) {
-                window.location.href = 'index.html'; 
+        request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains("print_queue")) {
+                db.createObjectStore("print_queue", { autoIncrement: true });
             }
-        } else {
-            alert('Batch is full (9/9). Please print the current batch first.');
-        }
+        };
+
+        request.onsuccess = (e) => {
+            const db = e.target.result;
+            const transaction = db.transaction("print_queue", "readwrite");
+            const store = transaction.objectStore(storeName);
+            
+            // Check count first
+            const countRequest = store.count();
+            countRequest.onsuccess = () => {
+                if (countRequest.result < 9) {
+                    store.add(imageData);
+                    alert(`High-res photo added! (${countRequest.result + 1}/9)`);
+                    window.open('printing-page/printing.html', '_blank');
+                    if (confirm("Photo verified? Click OK to reset booth.")) {
+                        window.location.href = 'index.html';
+                    }
+                } else {
+                    alert("Batch is full! Please print the 9 strips first.");
+                }
+            };
+        };
     } catch (error) {
-        console.error("Queue save failed:", error);
-        alert("Error saving to queue. Ensure you are using a modern browser.");
+        console.error("IndexedDB Save Failed:", error);
     }
 }
-
-// In your setupEventListeners function, ensure this ID is matched:
-document.getElementById('confirmToHolderBtn').addEventListener('click', saveToQueue);
