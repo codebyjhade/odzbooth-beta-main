@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ODZ Booth - Edit Your Masterpiece</title>
     <base href="/odzbooth-beta-main/"> 
-    
 
     <link rel="stylesheet" href="editing-page/edit-style.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -42,24 +41,24 @@
             <h2>Customize Your Strip</h2>
 
             <div class="tool-section">
-                <h3>Layout Design</h3>
-                <label for="frameSelect">Choose Frame:</label>
+                <h3>General Design</h3>
+                <label>Choose Frame:</label>
                 <select id="frameSelect"></select>
                 
-                <label for="titleSelect">Event Title:</label>
+                <label>Add Strip Title:</label>
                 <select id="titleSelect">
                     <option value="">No Title</option>
                     <option value="Odizee @ 19: Soaring Higher">Odizee @ 19: Soaring Higher</option>
                     <option value="19 Years of Excellence">19 Years of Excellence</option>
-                    <option value="Odizee Vibes 2026">Odizee Vibes 2026</option>
+                    <option value="Odizee Foundation Day 2026">Odizee Foundation Day 2026</option>
                 </select>
             </div>
 
             <div class="tool-section">
                 <h3>Text Tool</h3>
-                <input type="text" id="textInput" placeholder="Enter custom message...">
+                <input type="text" id="textInput" placeholder="Type a message...">
                 <div class="text-style-options">
-                    <input type="color" id="textColorInput" value="#333333">
+                    <input type="color" id="textColorInput">
                     <select id="textFontSelect">
                         <option value="'Poppins', sans-serif">Poppins</option>
                         <option value="'Fredoka', cursive">Fredoka</option>
@@ -77,40 +76,42 @@
                         <option value="right">Right</option>
                     </select>
                 </div>
-                <div class="btn-group" style="display: flex; gap: 10px; margin-top: 10px;">
+                <div class="btn-group" style="display: flex; gap: 10px;">
                     <button id="addTextBtn" class="action-btn">Add Text</button>
                     <button id="removeTextBtn" class="action-btn delete-btn">Remove</button>
                 </div>
             </div>
 
             <div class="tool-section">
-                <h3>Stickers</h3>
-                <select id="stickerSelect">
-                    <option value="assets/sticker1.png">Anniversary Logo</option>
-                    <option value="assets/sticker2.png">Party Hat</option>
-                </select>
-                <div class="btn-group" style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button id="addStickerBtn" class="action-btn">Add Sticker</button>
-                    <button id="removeStickerBtn" class="action-btn delete-btn">Remove</button>
+                <h3>Drawing Tool</h3>
+                <div class="drawing-controls">
+                    <input type="color" id="brushColorInput" value="#FF0000">
+                    <input type="number" id="brushSizeInput" value="5" min="1" max="50">
+                    <button id="toggleDrawModeBtn" class="action-btn">Draw</button>
+                    <button id="clearDrawingBtn" class="action-btn delete-btn">Clear</button>
                 </div>
             </div>
 
             <div class="tool-section">
-                <h3>Doodle Tool</h3>
-                <div class="drawing-controls">
-                    <input type="color" id="brushColorInput" value="#FF0000">
-                    <input type="number" id="brushSizeInput" value="5" min="1" max="50">
-                    <button id="toggleDrawModeBtn" class="action-btn">Draw Mode</button>
-                    <button id="clearDrawingBtn" class="action-btn delete-btn">Clear All</button>
+                <h3>Stickers</h3>
+                <select id="stickerSelect">
+                    <option value="assets/sticker1.png">Sticker 1</option>
+                    <option value="assets/sticker2.png">Sticker 2</option>
+                </select>
+                <div class="btn-group" style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button id="addStickerBtn" class="action-btn">Add</button>
+                    <button id="removeStickerBtn" class="action-btn delete-btn">Remove</button>
                 </div>
             </div>
 
             <div class="tool-section download-section">
                 <h3>Finish & Print</h3>
                 
-                <a href="printing-page/printing.html" class="action-btn dashboard-btn" style="background-color: #6f42c1; text-decoration: none; margin-bottom: 12px;">
-                    <i class='bx bx-desktop'></i> View Print Queue
-                </a>
+                <label>Format:</label>
+                <select id="downloadFormatSelect">
+                    <option value="image/png">PNG (Best Quality)</option>
+                    <option value="image/jpeg;0.95">JPEG (Smaller File)</option>
+                </select>
 
                 <button id="confirmToHolderBtn" class="action-btn" style="background-color: #28a745; margin-bottom: 12px;">
                     <i class='bx bx-check-circle'></i> Confirm to Paper Holder
@@ -119,6 +120,14 @@
                 <button id="downloadStripBtn" class="download-btn">
                     <i class='bx bxs-download'></i> Download Digital Copy
                 </button>
+
+                <button id="printStripBtn" class="action-btn" style="background-color: #007bff; margin-top: 12px;">
+                    <i class='bx bx-printer'></i> Direct Print Strip
+                </button>
+
+                <a href="printing-page/printing.html" class="action-btn dashboard-link" style="background-color: #6f42c1; text-decoration: none; margin-top: 12px;">
+                    <i class='bx bx-desktop'></i> Open Print Dashboard
+                </a>
             </div>
 
             <button id="retakeBtn" class="back-btn">
