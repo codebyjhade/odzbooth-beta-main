@@ -5,7 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A4 Strip Holder - Canva 1080x1920 Proportions</title>
     <base href="/odzbooth-beta-main/"> 
-    <link rel="stylesheet" href="printing-page/printing-style.css">
+    <style>
+        :root {
+            --green-bg: white;
+            /* Precise mm values converted from your annotated px screenshot */
+            --top-pad: 24.1mm; 
+            --left-pad: 14.2mm; 
+            --center-gap: 11.7mm; 
+            --right-margin: 8.7mm; 
+            --row-gap-small: 3.7mm; 
+            --row-gap-large: 14.6mm; 
+            --bottom-pad: 9.8mm;
+        }
+
+        body {
+            background-color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            font-family: sans-serif;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            background: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        button {
+            padding: 8px 18px;
+            background: #82d854;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            background-color: white;
+            display: flex;
+            box-sizing: border-box;
+        }
+
+        .green-holder {
+            background-color: var(--green-bg);
+            width: 100%;
+            height: 100%;
+            display: grid;
+            /* Manipulate the 341.9fr to make the Canva slots wider or narrower */
+            grid-template-columns: 341.9fr 658.1fr; 
+            padding: var(--top-pad) var(--right-margin) var(--bottom-pad) var(--left-pad);
+            column-gap: var(--center-gap);
+            box-sizing: border-box;
+        }
+
+        .slot {
+            background-color: white;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.05);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 100% 100% !important;
+            color: #ccc;
+            font-size: 10px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* --- CANVA SIZE LOGIC FOR VERTICAL SLOTS --- */
+        .col-left .slot {
+            /* This forces the exact Canva 1080x1920 ratio */
+            aspect-ratio: 1080 / 1920; 
+            height: auto; /* Height is now driven by the aspect-ratio math */
+        }
+
+        /* Landscape slots stretch to fill the right column height as before */
+        .col-right .slot {
+            height: 100%;
+        }
+
+        .col-left { 
+            display: flex; 
+            flex-direction: column; 
+            gap: var(--row-gap-large);
+            justify-content: center; /* Centers the Canva strips in the green area */
+        }
+        
+        .col-right { 
+            display: flex; 
+            flex-direction: column; 
+            gap: var(--row-gap-small); 
+        }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .controls { display: none; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
 </head>
 <body>
 
@@ -34,9 +144,50 @@
         </div>
     </div>
 
-     <script defer src="printing-page/printing.js"></script>
-
     <input type="file" id="filePicker" accept="image/*" style="display:none">
+
+    <script>
+        let targetSlot = null;
+        let shouldRotate = false;
+        const picker = document.getElementById('filePicker');
+
+        function upload(slot, rotate) {
+            targetSlot = slot;
+            shouldRotate = rotate;
+            picker.click();
+        }
+
+        picker.onchange = function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (shouldRotate) {
+                        rotateImage(e.target.result, targetSlot);
+                    } else {
+                        targetSlot.style.backgroundImage = `url('${e.target.result}')`;
+                        targetSlot.innerText = '';
+                    }
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+            this.value = ''; 
+        };
+
+        function rotateImage(src, slot) {
+            const img = new Image();
+            img.src = src;
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.height;
+                canvas.height = img.width;
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(90 * Math.PI / 180);
+                ctx.drawImage(img, -img.width / 2, -img.height / 2);
+                slot.style.backgroundImage = `url('${canvas.toDataURL()}')`;
+                slot.innerText = '';
+            };
+        }
+    </script>
 </body>
 </html>
-
