@@ -1,23 +1,16 @@
-/**
- * Updates the visual grid based on localStorage data.
- * FIX: Matches IDs slot-1 through slot-9.
- */
 function updateDashboard() {
     const queue = JSON.parse(localStorage.getItem('odz_print_queue') || '[]');
-    const statusLabel = document.getElementById('statusIndicator');
+    const indicator = document.getElementById('statusIndicator');
     
-    if (statusLabel) {
-        statusLabel.innerText = `Batch Status: ${queue.length}/9`;
-    }
+    if (indicator) indicator.innerText = `Batch Status: ${queue.length}/9`;
 
-    // Loop through all 9 slots
+    // Matches IDs slot-1 to slot-9
     for (let i = 1; i <= 9; i++) {
         const slot = document.getElementById(`slot-${i}`);
         if (slot) {
-            // Arrays are 0-indexed, slots are 1-indexed
-            const imageData = queue[i - 1];
-            if (imageData) {
-                slot.style.backgroundImage = `url(${imageData})`;
+            const data = queue[i-1]; // 0-indexed array
+            if (data) {
+                slot.style.backgroundImage = `url(${data})`;
                 slot.style.backgroundColor = "transparent";
             } else {
                 slot.style.backgroundImage = "none";
@@ -28,12 +21,11 @@ function updateDashboard() {
 }
 
 function clearQueue() {
-    if (confirm("Clear all photos in the current batch?")) {
+    if(confirm("Clear current batch?")) {
         localStorage.setItem('odz_print_queue', JSON.stringify([]));
         updateDashboard();
     }
 }
 
-// Auto-refresh the dashboard every 2 seconds
-setInterval(updateDashboard, 2000);
+setInterval(updateDashboard, 1000);
 window.onload = updateDashboard;
