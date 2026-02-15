@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OdizeeBooth - Printing Dashboard</title>
+    <title>OdizeeBooth - Precision Printing</title>
     <link rel="stylesheet" href="printing-style.css">
     <script defer src="printing.js"></script>
 </head>
@@ -11,21 +10,18 @@
     <div class="ui-layer">
         <h1 id="statusIndicator">Batch Status: 0/9</h1>
         <div class="btn-group">
-            <button onclick="window.print()" class="print-btn">Print Batch Now</button>
+            <button onclick="window.print()" class="print-btn">Print Now</button>
             <button onclick="clearQueue()" class="clear-btn">Clear Queue</button>
-            <a href="../index.html" class="back-link">Back to Booth</a>
+            <a href="../index.html">Back to Booth</a>
         </div>
     </div>
 
     <div class="a4-page">
-        <img src="../assets/a4-holder.png" class="overlay-template">
-        
         <div class="grid-container">
             <div class="column-left">
                 <div class="slot vertical-slot" id="slot-1"></div>
                 <div class="slot vertical-slot" id="slot-2"></div>
             </div>
-
             <div class="column-right">
                 <div class="slot landscape-slot" id="slot-3"></div>
                 <div class="slot landscape-slot" id="slot-4"></div>
@@ -36,6 +32,7 @@
                 <div class="slot landscape-slot" id="slot-9"></div>
             </div>
         </div>
+        <img src="../assets/a4-holder.png" class="overlay-template">
     </div>
 </body>
 </html>
