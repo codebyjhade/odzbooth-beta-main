@@ -1731,42 +1731,39 @@ document.addEventListener('DOMContentLoaded', initializeEditorPage);
 
 
 /**
- * Saves the current final photo strip to the printing queue in localStorage.
- * Once saved, it redirects the user back to the start or shows a success message.
+ * Logic for the "Confirm to Paper Holder" button.
+ * Saves to localStorage and opens the dashboard for verification.
  */
 async function saveToQueue() {
     try {
-        // 1. Generate the final composite image from the canvas
+        // Generate the high-quality final image
         const finalCanvas = await createFinalStripCanvas();
         const imageData = finalCanvas.toDataURL('image/png');
 
-        // 2. Retrieve the existing queue or create a new one
         let printQueue = JSON.parse(localStorage.getItem('odz_print_queue') || '[]');
 
-        // 3. Add the new image to the queue
         if (printQueue.length < 9) {
             printQueue.push(imageData);
             localStorage.setItem('odz_print_queue', JSON.stringify(printQueue));
             
-            logAnalytics('Added_To_Print_Queue', { queuePosition: printQueue.length });
-            alert(`Photo saved to queue! (${printQueue.length}/9)`);
+            // VERIFICATION WORKFLOW:
+            alert(`Added to batch! Current Status: ${printQueue.length}/9.`);
             
-            // 4. Redirect to the printing page or back to home
-            // You can choose to go to the printing page to see status or back to index for next user
-            window.location.href = 'index.html'; 
+            // Open the dashboard in a new tab so you can verify the photo is there
+            window.open('printing-page/printing.html', '_blank'); 
+
+            // Manual confirmation before resetting the booth for the next student
+            if (confirm("Photo verified in queue? Click OK to start a new session.")) {
+                window.location.href = 'index.html'; 
+            }
         } else {
-            alert('The print queue is full (9/9). Please wait for the current batch to finish printing.');
+            alert('Batch is full (9/9). Please print the current batch first.');
         }
     } catch (error) {
-        console.error("Error saving to print queue:", error);
-        alert("Failed to save to print queue. Please try again.");
+        console.error("Queue save failed:", error);
+        alert("Error saving to queue. Ensure you are using a modern browser.");
     }
 }
 
-// Attach the event listener to the "Confirm to Paper Holder" button
-document.addEventListener('DOMContentLoaded', () => {
-    const confirmBtn = document.getElementById('confirmToHolderBtn');
-    if (confirmBtn) {
-        confirmBtn.addEventListener('click', saveToQueue);
-    }
-});
+// In your setupEventListeners function, ensure this ID is matched:
+document.getElementById('confirmToHolderBtn').addEventListener('click', saveToQueue);
