@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODZ Booth - Edit Your Masterpiece</title>
+    <base href="/odzbooth-beta/"> 
+
+    <link rel="stylesheet" href="editing-page/edit-style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+    
+    <script defer src="editing-page/edit.js"></script> 
+</head>
+<body>
+
+    <header class="editor-header">
+        <h1 class="title">ODZ <span class="booth">BOOTH</span></h1>
+        <p>Unleash Your Creativity: Edit Your Masterpiece!</p>
+    </header>
+
+    <main class="editor-wrapper">
+        <div class="photo-strip-preview">
+            <div id="canvasContainer" class="canvas-container">
+                <canvas id="photoCanvas"></canvas>
+                
+                <div id="noPhotosMessage" class="info-message" style="display: none;">
+                    <p>No photos found.</p> 
+                    <p class="sub-message">Please go back to <a href="capture-page/capture-page.html">capture photos</a> first.</p>
+                </div>
+                
+                <div id="downloadSpinner" class="spinner-overlay hidden-spinner">
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
+                    <p>Generating Strip...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tools-panel">
+            <h2>Customize Your Strip</h2>
+
+            <div class="tool-section download-section">
+                <h3>Finish Options</h3>
+                <button id="confirmToHolderBtn" class="action-btn" style="background-color: #28a745; margin-bottom: 12px;">
+                    <i class='bx bx-check-circle'></i> Confirm to Paper Holder
+                </button>
+                <button id="downloadStripBtn" class="download-btn">
+                    <i class='bx bxs-download'></i> Download Digital Copy
+                </button>
+            </div>
+
+            <button id="retakeBtn" class="back-btn">
+                <i class='bx bx-camera'></i> Take New Photos
+            </button>
+        </div>
+    </main>
+</body>
+</html>
