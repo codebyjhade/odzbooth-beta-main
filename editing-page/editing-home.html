@@ -107,19 +107,24 @@
             <div class="tool-section download-section">
                 <h3>Finish & Print</h3>
                 
-                <label>Format:</label>
-                <select id="downloadFormatSelect">
-                    <option value="image/png">PNG (Best Quality)</option>
-                    <option value="image/jpeg;0.95">JPEG (Smaller File)</option>
-                </select>
-
+            
                 <button id="confirmToHolderBtn" class="action-btn" style="background-color: #28a745; margin-bottom: 12px;">
                     <i class='bx bx-check-circle'></i> Confirm to Paper Holder
                 </button>
                 
-                <button id="downloadStripBtn" class="download-btn">
-                    <i class='bx bxs-download'></i> Download Digital Copy
-                </button>
+                <div class="tool-section download-section">
+                      <h3>Download Settings</h3>
+    
+                   <label for="downloadFormatSelect">File Format:</label>
+                <select id="downloadFormatSelect">
+                 <option value="image/png">PNG (High Quality)</option>
+                  <option value="image/jpeg;0.95">JPEG (Compact)</option>
+                     </select>
+ 
+                  <button id="downloadStripBtn" class="download-btn">
+                     <i class='bx bxs-download'></i> Download Digital Copy
+               </button>
+                  </div>
 
                 <button id="printStripBtn" class="action-btn" style="background-color: #007bff; margin-top: 12px;">
                     <i class='bx bx-printer'></i> Direct Print Strip
@@ -137,3 +142,4 @@
     </main>
 </body>
 </html>
+
