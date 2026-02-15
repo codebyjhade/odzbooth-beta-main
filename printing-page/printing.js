@@ -1,16 +1,23 @@
+const DB_NAME = "OdizeePrintingDB";
+const STORE_NAME = "print_queue";
+
 function updateDashboard() {
-    const request = indexedDB.open("OdizeePrintingDB", 1);
+    const request = indexedDB.open(DB_NAME, 1);
 
     request.onsuccess = (e) => {
         const db = e.target.result;
-        const transaction = db.transaction("print_queue", "readonly");
-        const store = transaction.objectStore("print_queue");
+        if (!db.objectStoreNames.contains(STORE_NAME)) return;
+
+        const transaction = db.transaction(STORE_NAME, "readonly");
+        const store = transaction.objectStore(STORE_NAME);
         const getAllRequest = store.getAll();
 
         getAllRequest.onsuccess = () => {
             const queue = getAllRequest.result;
-            document.getElementById('statusIndicator').innerText = `Batch Status: ${queue.length}/9`;
+            const indicator = document.getElementById('statusIndicator');
+            if (indicator) indicator.innerText = `Batch Status: ${queue.length}/9`;
 
+            // Map data to slots slot-1 through slot-9
             for (let i = 1; i <= 9; i++) {
                 const slot = document.getElementById(`slot-${i}`);
                 if (slot) {
@@ -28,12 +35,16 @@ function updateDashboard() {
 }
 
 function clearQueue() {
-    if (confirm("Clear all high-res photos?")) {
-        const request = indexedDB.open("OdizeePrintingDB", 1);
+    if (confirm("Permanently delete all high-res photos in this batch?")) {
+        const request = indexedDB.open(DB_NAME, 1);
         request.onsuccess = (e) => {
             const db = e.target.result;
-            db.transaction("print_queue", "readwrite").objectStore("print_queue").clear();
-            updateDashboard();
+            const transaction = db.transaction(STORE_NAME, "readwrite");
+            transaction.objectStore(STORE_NAME).clear();
+            transaction.oncomplete = () => updateDashboard();
         };
     }
 }
+
+setInterval(updateDashboard, 1500);
+window.onload = updateDashboard;
