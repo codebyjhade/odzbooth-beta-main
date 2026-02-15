@@ -1,60 +1,110 @@
-:root {
-    --strip-w: 704.6px;
-    --strip-h: 244px;
-}
 
-body { margin: 0; background: #555; font-family: sans-serif; }
-.ui-layer { text-align: center; padding: 15px; background: #fff; position: relative; z-index: 100; }
+        :root {
+            --green-bg: white;
+            /* Precise mm values converted from your annotated px screenshot */
+            --top-pad: 24.1mm; 
+            --left-pad: 14.2mm; 
+            --center-gap: 11.7mm; 
+            --right-margin: 8.7mm; 
+            --row-gap-small: 3.7mm; 
+            --row-gap-large: 14.6mm; 
+            --bottom-pad: 9.8mm;
+        }
 
-.a4-page {
-    width: 794px; height: 1123px;
-    background: white; margin: 20px auto;
-    position: relative; overflow: hidden;
-}
+        body {
+            background-color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            font-family: sans-serif;
+        }
 
-/* Template sits ON TOP to act as a frame */
-.overlay-template {
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 20; pointer-events: none;
-}
+        .controls {
+            margin-bottom: 20px;
+            background: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
 
-.grid-container {
-    position: absolute;
-    top: 91px;      /* Exact Top Margin */
-    left: 53.7px;   /* Exact Left Margin */
-    display: flex;
-    z-index: 10;
-}
+        button {
+            padding: 8px 18px;
+            background: #82d854;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-.column-left { display: flex; flex-direction: column; gap: 55.5px; } /* */
-.vertical-slot { width: 341.9px; height: 480px; } /* */
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            background-color: white;
+            display: flex;
+            box-sizing: border-box;
+        }
 
-.column-right { 
-    margin-left: 44.3px; /* Center divider */
-    display: flex; flex-direction: column; gap: 14px; 
-}
+        .green-holder {
+            background-color: var(--green-bg);
+            width: 100%;
+            height: 100%;
+            display: grid;
+            /* Manipulate the 341.9fr to make the Canva slots wider or narrower */
+            grid-template-columns: 341.9fr 658.1fr; 
+            padding: var(--top-pad) var(--right-margin) var(--bottom-pad) var(--left-pad);
+            column-gap: var(--center-gap);
+            box-sizing: border-box;
+        }
 
-/* Rotation for right column strips */
-.landscape-slot {
-    width: var(--strip-w); height: var(--strip-h);
-    transform: rotate(90deg) translate(0, -100%);
-    transform-origin: top left;
-}
+        .slot {
+            background-color: white;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.05);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 100% 100% !important;
+            color: #ccc;
+            font-size: 10px;
+            text-align: center;
+            overflow: hidden;
+        }
 
-.slot {
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-color: #f0f0f0;
-    border: 1px dashed #aaa;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: #888;
-}
+        /* --- CANVA SIZE LOGIC FOR VERTICAL SLOTS --- */
+        .col-left .slot {
+            /* This forces the exact Canva 1080x1920 ratio */
+            aspect-ratio: 1080 / 1920; 
+            height: auto; /* Height is now driven by the aspect-ratio math */
+        }
 
-.slot.has-image { border: none; }
+        /* Landscape slots stretch to fill the right column height as before */
+        .col-right .slot {
+            height: 100%;
+        }
 
-@media print {
-    .ui-layer, .slot span { display: none !important; }
-    .slot { border: none; background-color: transparent; }
-    .a4-page { margin: 0; }
-}
+        .col-left { 
+            display: flex; 
+            flex-direction: column; 
+            gap: var(--row-gap-large);
+            justify-content: center; /* Centers the Canva strips in the green area */
+        }
+        
+        .col-right { 
+            display: flex; 
+            flex-direction: column; 
+            gap: var(--row-gap-small); 
+        }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .controls { display: none; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
