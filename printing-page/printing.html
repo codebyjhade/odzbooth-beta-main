@@ -2,45 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>OdizeeBooth - Manual A4 Layout</title>
-     <base href="/odzbooth-beta-main/"> 
-    <link rel="stylesheet" href="printing-page/printing-style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A4 Strip Holder - Canva 1080x1920 Proportions</title>
+    <base href="/odzbooth-beta-main/"> 
+    <link rel="stylesheet" href="printing-page/style.css">
 </head>
 <body>
-    <div class="ui-layer">
-        <h1>Manual A4 Template Manager</h1>
-        <p>Click a slot to insert a photo strip manually.</p>
-        <div class="btn-group">
-            <button onclick="window.print()" class="print-btn">Print Page</button>
-            <button onclick="resetTemplate()" class="clear-btn">Clear All Slots</button>
-            <a href="../index.html">Back to Booth</a>
-        </div>
+
+    <div class="controls">
+        <span>📸 <b>Left:</b> Canva 1080x1920 Size | <b>Right:</b> Landscape Strips</span>
+        <button onclick="window.print()">Print A4 Layout</button>
+        <button onclick="location.reload()" style="background:#eee">Reset</button>
     </div>
 
-    <div class="a4-page" id="printableArea">
-        <img src="assets/a4-holder.png" class="overlay-template">
-
-        <div class="grid-container">
-            <div class="column-left">
-                <div class="slot vertical-slot" onclick="triggerInput(1)" id="slot-1"><span>+ Click to Insert</span></div>
-                <div class="slot vertical-slot" onclick="triggerInput(2)" id="slot-2"><span>+ Click to Insert</span></div>
+    <div class="a4-page">
+        <div class="green-holder">
+            <div class="col-left">
+                <div class="slot" onclick="upload(this, false)">CANVA STRIP 1</div>
+                <div class="slot" onclick="upload(this, false)">CANVA STRIP 2</div>
             </div>
 
-            <div class="column-right">
-                <div class="slot landscape-slot" onclick="triggerInput(3)" id="slot-3"><span>+</span></div>
-                <div class="slot landscape-slot" onclick="triggerInput(4)" id="slot-4"><span>+</span></div>
-                <div class="slot landscape-slot" onclick="triggerInput(5)" id="slot-5"><span>+</span></div>
-                <div class="slot landscape-slot" onclick="triggerInput(6)" id="slot-6"><span>+</span></div>
-                <div class="slot landscape-slot" onclick="triggerInput(7)" id="slot-7"><span>+</span></div>
-                <div class="slot landscape-slot" onclick="triggerInput(8)" id="slot-8"><span>+</span></div>
-                <div class="slot landscape-slot" onclick="triggerInput(9)" id="slot-9"><span>+</span></div>
+            <div class="col-right">
+                <div class="slot" onclick="upload(this, true)">LANDSCAPE STRIP</div>
+                <div class="slot" onclick="upload(this, true)">LANDSCAPE STRIP</div>
+                <div class="slot" onclick="upload(this, true)">LANDSCAPE STRIP</div>
+                <div class="slot" onclick="upload(this, true)">LANDSCAPE STRIP</div>
+                <div class="slot" onclick="upload(this, true)">LANDSCAPE STRIP</div>
+                <div class="slot" onclick="upload(this, true)">LANDSCAPE STRIP</div>
+                <div class="slot" onclick="upload(this, true)">LANDSCAPE STRIP</div>
             </div>
         </div>
     </div>
 
-    <input type="file" id="manualFileInput" hidden accept="image/*" onchange="handleFile(this)">
+     <script defer src="printing-page/script.js"></script>
 
-    <script src="printing-page/printing.js"></script>
+    <input type="file" id="filePicker" accept="image/*" style="display:none">
 </body>
 </html>
-
