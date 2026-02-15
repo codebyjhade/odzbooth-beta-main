@@ -1,31 +1,39 @@
 function updateDashboard() {
-    const queue = JSON.parse(localStorage.getItem('odz_print_queue') || '[]');
-    const indicator = document.getElementById('statusIndicator');
-    
-    if (indicator) indicator.innerText = `Batch Status: ${queue.length}/9`;
+    const request = indexedDB.open("OdizeePrintingDB", 1);
 
-    // Matches IDs slot-1 to slot-9
-    for (let i = 1; i <= 9; i++) {
-        const slot = document.getElementById(`slot-${i}`);
-        if (slot) {
-            const data = queue[i-1]; // 0-indexed array
-            if (data) {
-                slot.style.backgroundImage = `url(${data})`;
-                slot.style.backgroundColor = "transparent";
-            } else {
-                slot.style.backgroundImage = "none";
-                slot.style.backgroundColor = "#eee";
+    request.onsuccess = (e) => {
+        const db = e.target.result;
+        const transaction = db.transaction("print_queue", "readonly");
+        const store = transaction.objectStore("print_queue");
+        const getAllRequest = store.getAll();
+
+        getAllRequest.onsuccess = () => {
+            const queue = getAllRequest.result;
+            document.getElementById('statusIndicator').innerText = `Batch Status: ${queue.length}/9`;
+
+            for (let i = 1; i <= 9; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                if (slot) {
+                    if (queue[i - 1]) {
+                        slot.style.backgroundImage = `url(${queue[i - 1]})`;
+                        slot.style.backgroundColor = "transparent";
+                    } else {
+                        slot.style.backgroundImage = "none";
+                        slot.style.backgroundColor = "#f0f0f0";
+                    }
+                }
             }
-        }
-    }
+        };
+    };
 }
 
 function clearQueue() {
-    if(confirm("Clear current batch?")) {
-        localStorage.setItem('odz_print_queue', JSON.stringify([]));
-        updateDashboard();
+    if (confirm("Clear all high-res photos?")) {
+        const request = indexedDB.open("OdizeePrintingDB", 1);
+        request.onsuccess = (e) => {
+            const db = e.target.result;
+            db.transaction("print_queue", "readwrite").objectStore("print_queue").clear();
+            updateDashboard();
+        };
     }
 }
-
-setInterval(updateDashboard, 1000);
-window.onload = updateDashboard;
